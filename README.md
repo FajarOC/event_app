@@ -1,3 +1,3 @@
-# flutter_application
+# Event_App
 
 A new Flutter project.
