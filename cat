@@ -1,0 +1,304 @@
+// lib/screens/events_feed_screen.dart
+import 'package:flutter/material.dart';
+import '../repository/ticket_repository.dart';
+import '../widgets/event_card.dart';
+import '../models/ticket.dart';
+import 'favorites_screen.dart';
+
+class EventsFeedScreen extends StatefulWidget {
+  const EventsFeedScreen({super.key});
+
+  @override
+  _EventsFeedScreenState createState() => _EventsFeedScreenState();
+}
+
+class _EventsFeedScreenState extends State<EventsFeedScreen> {
+  final tickets = TicketRepository.getTickets();
+  List<Ticket> favoriteTickets = []; // Daftar favorit
+  int _currentIndex = 0;
+
+  // Fungsi untuk menambah atau menghapus favorit
+  void toggleFavorite(Ticket ticket) {
+    setState(() {
+      if (favoriteTickets.contains(ticket)) {
+        favoriteTickets.remove(ticket);
+      } else {
+        favoriteTickets.add(ticket);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.blue,
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {},
+        ),
+        title: const Text("pajarr_ori"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.person),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: _currentIndex == 0
+          ? Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TextField(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.search),
+                      hintText: "Search for events...",
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                    ),
+                  ),
+                ),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Chip(label: Text("Music")),
+                      Chip(label: Text("Sports")),
+                      Chip(label: Text("Art")),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: tickets.length,
+                    itemBuilder: (context, index) {
+                      final ticket = tickets[index];
+                      return EventCard(
+                        ticket: ticket,
+                        isFavorite: favoriteTickets.contains(ticket), // Cek apakah tiket sudah di favorit
+                        onFavoriteToggle: toggleFavorite, // Callback untuk menambah atau menghapus favorit
+                      );
+                    },
+                  ),
+                ),
+              ],
+            )
+          : FavoritesScreen(favoriteTickets: favoriteTickets), // Menampilkan halaman favorit
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        selectedItemColor: const Color.fromARGB(255, 102, 98, 98),
+        unselectedItemColor: const Color.fromARGB(179, 43, 3, 3),
+        backgroundColor: const Color.fromARGB(255, 250, 252, 253),
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: "Favorite",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            label: "Camera",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.message),
+            label: "Inbox",
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: "Profile",
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+
+// lib/screens/event_feed_screen.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_application/repository/ticket_repository.dart';
+import 'package:flutter_application/screens/favorites_screen.dart';
+import '../models/ticket.dart';
+import '../widgets/event_card.dart';
+
+class EventsFeedScreen extends StatefulWidget {
+  const EventsFeedScreen({super.key});
+
+  @override
+  _EventsFeedScreenState createState() => _EventsFeedScreenState();
+}
+
+ 
+class _EventsFeedScreenState extends State<EventsFeedScreen> {
+  final tickets = TicketRepository.getTickets();
+  List<Ticket> favoriteTickets = []; // Daftar favorit
+  int _currentIndex = 0;
+
+  // Fungsi untuk menambah atau menghapus favorit
+  void toggleFavorite(Ticket ticket) {
+    setState(() {
+      if (favoriteTickets.contains(ticket)) {
+        favoriteTickets.remove(ticket);
+      } else {
+        favoriteTickets.add(ticket);
+      }
+    });
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    List<Ticket> tickets = TicketRepository.getTickets();
+
+    return Scaffold(
+      backgroundColor: Colors.brown[900], // Sesuaikan warna latar belakang
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white), // Ikon garis tiga
+          onPressed: () {},
+        ),
+        title: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.location_on, color: Colors.red),
+            Text(
+              'Jakarta, Ina',
+              style: TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const CircleAvatar(
+              backgroundImage: AssetImage('assets/images/user_profile.png'), // Gambar profil user
+            ),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 10),
+            // Kotak pencarian
+            TextField(
+              decoration: InputDecoration(
+                hintText: 'Search all events...',
+                hintStyle: TextStyle(color: Colors.grey[400]),
+                prefixIcon: const Icon(Icons.search, color: Colors.white),
+                filled: true,
+                fillColor: Colors.brown[800],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
+            // Kategori chips
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Chip(
+                  label: Text('My feed', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.red,
+                ),
+                const SizedBox(width: 8),
+                Chip(
+                  label: const Text('Food', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.brown[700],
+                ),
+                const SizedBox(width: 8),
+                Chip(
+                  label: const Text('Concerts', style: TextStyle(color: Colors.white)),
+                  backgroundColor: Colors.brown[700],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Teks Upcoming events
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Upcoming events',
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'See All',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            // Daftar event menggunakan EventCard
+            Expanded(
+              child: ListView.builder(
+                itemCount: tickets.length,
+                itemBuilder: (context, index) {
+                  Ticket ticket = tickets[index];
+                  return EventCard(
+                  ticket: ticket,
+                  isFavorite: favoriteTickets.contains(ticket), // Cek apakah tiket sudah di favorit
+                  onFavoriteToggle: toggleFavorite, // Callback untuk menambah atau menghapus favorit
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+      FavoritesScreen(favoriteTickets: favoriteTickets), // Menampilkan halaman favorit
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.blue, // Warna biru untuk navigation bar
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white60,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Favorite',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera_alt),
+            label: 'Camera',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.inbox),
+            label: 'Inbox',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}

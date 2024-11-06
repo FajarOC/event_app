@@ -1,0 +1,32 @@
+name: flutter_application
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  qr_flutter: ^4.0.0  # QR code package for TicketScreen
+  dotted_line: ^3.2.3
+  barcode: ^2.2.8
+  barcode_widget: ^2.0.4
+  share_plus: ^4.0.10
+  font_awesome_flutter: ^10.3.0
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/ticket_oliver.jpg
+    - assets/oliver_sykes.jpg
+    - assets/man.jpg
+    - assets/konser1.jpeg
+    - assets/Juicy.jpeg
+    - assets/cangcuters.jpg
